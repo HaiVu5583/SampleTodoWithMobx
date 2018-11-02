@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, observe } from 'mobx'
 import { TODO_STATUS } from '~/src/constants'
 
 export default class TodoStore {
@@ -24,16 +24,19 @@ export default class TodoStore {
             todo: 'Hôm nay đéo biết làm cái gì cả. Đây là một ghi chú rất dài.'
         }
     ]
+
     @computed get todoList() {
         return this.todos
     }
     @action toggleTodo(id) {
-        const itemIndex = this.todos.findIndex(itemLoop => itemLoop.id == id)
-        const newItemStatus = this.todos[itemIndex]['status'] == TODO_STATUS.ACTIVE ? TODO_STATUS.DONE : TODO_STATUS.ACTIVE
-        this.todos[itemIndex] = {
-            ...this.todos[itemIndex],
+        const cloneTodos = [...this.todos]
+        const itemIndex = cloneTodos.findIndex(itemLoop => itemLoop.id == id)
+        const newItemStatus = cloneTodos[itemIndex]['status'] == TODO_STATUS.ACTIVE ? TODO_STATUS.DONE : TODO_STATUS.ACTIVE
+        cloneTodos[itemIndex] = {
+            ...cloneTodos[itemIndex],
             status: newItemStatus
         }
+        this.todos = cloneTodos
     }
 
     @action updateTodo() {

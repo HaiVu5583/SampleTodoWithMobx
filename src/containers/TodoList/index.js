@@ -4,49 +4,27 @@ import TodoListItem from '~/src/components/TodoListItem'
 import { TODO_STATUS } from '~/src/constants'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import styles from './styles'
+import { observer } from "mobx-react"
+import TodoStore from '~/src/store/TodoStore'
 
+@observer
 export default class TodoList extends Component {
     static navigationOptions = {
         header: null,
     }
 
+    static defaultProps = {
+        todoStore: new TodoStore()
+    }
+
     constructor(props) {
         super(props)
         this.state = {
-            todoList: [
-                {
-                    id: 1,
-                    status: TODO_STATUS.ACTIVE,
-                    todo: 'Check mail'
-                },
-                {
-                    id: 2,
-                    status: TODO_STATUS.DONE,
-                    todo: 'Update prevent multiple click'
-                },
-                {
-                    id: 3,
-                    status: TODO_STATUS.ACTIVE,
-                    todo: 'Create sample app with Mobx'
-                },
-                {
-                    id: 4,
-                    status: TODO_STATUS.ACTIVE,
-                    todo: 'Hôm nay đéo biết làm cái gì cả. Đây là một ghi chú rất dài.'
-                }
-            ]
         }
     }
 
     _handlePressCheckTodoItem = (item) => {
-        const cloneTodoList = [...this.state.todoList]
-        const itemIndex = cloneTodoList.findIndex(itemLoop => itemLoop.id == item.id)
-        const newItemStatus = cloneTodoList[itemIndex]['status'] == TODO_STATUS.ACTIVE ? TODO_STATUS.DONE : TODO_STATUS.ACTIVE
-        cloneTodoList[itemIndex] = {
-            ...cloneTodoList[itemIndex],
-            status: newItemStatus
-        }
-        this.setState({ todoList: cloneTodoList })
+        this.props.todoStore.toggleTodo(item.id)
     }
 
     _renderTodoItem = ({ item, index }) => {
@@ -76,31 +54,13 @@ export default class TodoList extends Component {
             <View style={{ flex: 1, backgroundColor: 'white' }}>
                 <FlatList
                     ListHeaderComponent={this._renderHeader}
-                    data={this.state.todoList}
+                    data={this.props.todoStore.todoList}
                     renderItem={this._renderTodoItem}
                     keyExtractor={item => '' + item.id}
                 />
-
-                <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    position: 'absolute',
-                    bottom: 16,
-                    width: '100%'
-                }}>
+                <View style={styles.buttonAddTodoContainer}>
                     <TouchableOpacity onPress={this._handlePressAddTodo}>
-                        <View style={{
-                            elevation: 2,
-                            backgroundColor: '#158ad0',
-                            height: 54,
-                            borderRadius: 27,
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            paddingHorizontal: 50,
-
-                        }}>
+                        <View style={styles.buttonAddTodo}>
                             <Icon name={'plus'} size={25} color={'white'} />
                             <Text style={{ color: 'white', marginLeft: 5 }}>Add Todo</Text>
                         </View>
