@@ -16,7 +16,7 @@ export default class SplashScreen extends Component {
                 actions: [NavigationActions.navigate({ routeName: 'TodoList' })],
             });
             this.props.navigation.dispatch(resetAction);
-        }, 1200)
+        }, 1500)
     }
 
     render() {
