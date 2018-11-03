@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { View, TouchableOpacity, Text } from 'react-native'
 import { withNavigation } from 'react-navigation'
+import styles from './styles'
 
 class Header extends PureComponent {
 
@@ -22,14 +23,9 @@ class Header extends PureComponent {
 
 
         return (
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                height: 56
-            }}>
+            <View style={styles.toolbar}>
                 <TouchableOpacity onPress={this._handlePressIconLeft}>
-                    <View style={{ paddingLeft: 24, paddingRight: 32 }}>
+                    <View style={styles.leftContainer}>
                         <Icon
                             name={iconLeft}
                             size={24}
@@ -42,8 +38,8 @@ class Header extends PureComponent {
                 }
                 {!!rightText &&
                     <TouchableOpacity onPress={onPressRight}>
-                        <View style={{ paddingLeft: 24, paddingRight: 16 }}>
-                            <Text style={{ fontSize: 16, color: iconColor }}>{rightText}</Text>
+                        <View style={styles.rightContainer}>
+                            <Text style={[styles.rightText, { color: iconColor }]}>{rightText}</Text>
                         </View>
                     </TouchableOpacity>}
             </View>
